@@ -1,4 +1,4 @@
-FROM pdal/pdal:1.5
+FROM pdal/pdal:1.6-ubuntu
 
 # Pick up some dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -21,19 +21,6 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
 
-RUN pip --no-cache-dir install \
-        ipykernel \
-        jupyter \
-        matplotlib \
-        numpy \
-        scipy \
-        sklearn \
-        pandas \
-        Pillow \
-        pdal \
-        && \
-    python -m ipykernel.kernelspec
-
 RUN apt-get update && apt-get install -y --fix-missing --no-install-recommends \
       pandoc \
       texlive-fonts-recommended \
@@ -46,6 +33,23 @@ RUN apt-get update && apt-get install -y --fix-missing --no-install-recommends \
       && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists*
+
+RUN pip --no-cache-dir install \
+        ipyleaflet \
+        ipyvolume \
+        pyproj \
+        shapely \
+        ipykernel \
+        jupyter \
+        matplotlib \
+        numpy \
+        scipy \
+        sklearn \
+        pandas \
+        Pillow \
+        pdal \
+        && \
+    python -m ipykernel.kernelspec
 
 # Set up our notebook config.
 COPY jupyter_notebook_config.py /root/.jupyter/
@@ -61,6 +65,6 @@ COPY run_jupyter.sh /
 # IPython
 EXPOSE 8888
 
-WORKDIR "/notebooks"
+WORKDIR "/"
 
 CMD ["/run_jupyter.sh", "--allow-root"]
